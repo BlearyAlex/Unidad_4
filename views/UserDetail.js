@@ -9,7 +9,7 @@ const UserDetail = ({ navigation, route }) => {
   const { id } = route.params;
 
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState(nul);
+  const [user, setUser] = useState(null);
 
   // Funcion para obtener un usuario de la base de datos
   const getUserById = async () => {

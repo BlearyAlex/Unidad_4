@@ -4,7 +4,7 @@ import { ListItem, Avatar, Button } from '@rneui/themed';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { db } from '../database/firebase';
-import { getDoc, collection, doc, deleteDoc } from 'firebase/firestore';
+import { getDocs, collection, doc, deleteDoc } from 'firebase/firestore';
 
 const UserList = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
@@ -13,7 +13,6 @@ const UserList = ({ navigation }) => {
   const getUsers = async () => {
     const dataColl = collection(db, 'users');
     const docsDB = await getDocs(dataColl);
-
     const readUsers = [];
     docsDB.forEach((doc) => {
       // console.log(doc.data);
@@ -30,6 +29,7 @@ const UserList = ({ navigation }) => {
     setUsers(readUsers);
     setLoading(false);
   };
+
   useEffect(() => {
     if (users.length > 0) return;
     setLoading(true);
@@ -39,13 +39,15 @@ const UserList = ({ navigation }) => {
   async function onDelete(id) {
     Alert.alert('Eliminar Usuario', 'Realmente deseas eliminar el usuario', [
       {
-        text: 'Ok',
+        text: 'No',
+      },
+      {
+        text: 'Si',
         onPress: async () => {
           await deleteDoc(doc(db, 'users', id));
           setUsers([]);
         },
       },
-      { text: 'OK', onPress: () => console.log('OK Pressed') },
     ]);
   }
 
@@ -66,7 +68,9 @@ const UserList = ({ navigation }) => {
               <ListItem
                 key={user.id}
                 bottomDivider
-                onPress={navigation.navigate('UserList', { id: user.id })}
+                onPress={() =>
+                  navigation.navigate('UserDetail', { id: user.id })
+                }
               >
                 <ListItem.Chevron />
                 <Avatar
